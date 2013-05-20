@@ -1,7 +1,5 @@
 #!/bin/bash
 #
-# Argument = -u user -p password -k key -s secret -b bucket
-#
 # To Do - Add logging of output.
 # To Do - Abstract bucket region to options
 
