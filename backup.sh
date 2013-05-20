@@ -17,18 +17,20 @@ usage: $0 options
 This script dumps the current mongo database, tars it, then sends it to an Amazon S3 bucket.
 
 OPTIONS:
-   -h      Show this message
+   -help   Show this message
    -u      Mongodb user
    -p      Mongodb password
+   -h      Mongodb host <hostname><:port>
    -b      Amazon S3 bucket name
 EOF
 }
 
 MONGODB_USER=
 MONGODB_PASSWORD=
+MONGODB_HOST=
 S3_BUCKET=
 
-while getopts “ht:u:p:k:s:r:b:” OPTION
+while getopts “h:u:p:o:k:s:r:b:” OPTION
 do
   case $OPTION in
     h)
@@ -40,6 +42,9 @@ do
       ;;
     p)
       MONGODB_PASSWORD=$OPTARG
+      ;;
+    o)
+      MONGODB_HOST=$OPTARG
       ;;
     b)
       S3_BUCKET=$OPTARG
@@ -56,6 +61,10 @@ then
   usage
   exit 1
 fi
+if [[ -z $MONGODB_HOST ]]
+then
+  MONGODB_HOST="localhost:27017"
+fi
 
 # Get the directory the script is being run from
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -67,13 +76,13 @@ ARCHIVE_NAME="$FILE_NAME.tar.gz"
 
 # Lock the database
 # Note there is a bug in mongo 2.2.0 where you must touch all the databases before you run mongodump
-mongo -username "$MONGODB_USER" -password "$MONGODB_PASSWORD" admin --eval "var databaseNames = db.getMongo().getDBNames(); for (var i in databaseNames) { printjson(db.getSiblingDB(databaseNames[i]).getCollectionNames()) }; printjson(db.fsyncLock());"
+mongo -username "$MONGODB_USER" -password "$MONGODB_PASSWORD" -host "$MONGODB_HOST" admin --eval "var databaseNames = db.getMongo().getDBNames(); for (var i in databaseNames) { printjson(db.getSiblingDB(databaseNames[i]).getCollectionNames()) }; printjson(db.fsyncLock());"
 
 # Dump the database
-mongodump -username "$MONGODB_USER" -password "$MONGODB_PASSWORD" --out $DIR/backup/$FILE_NAME
+mongodump -username "$MONGODB_USER" -password "$MONGODB_PASSWORD" -host "$MONGODB_HOST" --out $DIR/backup/$FILE_NAME
 
 # Unlock the database
-mongo -username "$MONGODB_USER" -password "$MONGODB_PASSWORD" admin --eval "printjson(db.fsyncUnlock());"
+mongo -username "$MONGODB_USER" -password "$MONGODB_PASSWORD" -host "$MONGODB_HOST" admin --eval "printjson(db.fsyncUnlock());"
 
 # Tar Gzip the file
 tar -C $DIR/backup/ -zcvf $DIR/backup/$ARCHIVE_NAME $FILE_NAME/
