@@ -14,8 +14,6 @@
 
 `bash /path/to/backup.sh -u MONGODB_USER -p MONGODB_PASSWORD -b S3_BUCKET`
 
-Where `S3_REGION` is in the format `ap-southeast-1`
-
 ## Cron
 
 ### Daily
