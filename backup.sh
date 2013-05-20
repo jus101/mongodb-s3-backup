@@ -20,18 +20,12 @@ OPTIONS:
    -h      Show this message
    -u      Mongodb user
    -p      Mongodb password
-   -k      AWS Access Key
-   -s      AWS Secret Key
-   -r      Amazon S3 region
    -b      Amazon S3 bucket name
 EOF
 }
 
 MONGODB_USER=
 MONGODB_PASSWORD=
-AWS_ACCESS_KEY=
-AWS_SECRET_KEY=
-S3_REGION=
 S3_BUCKET=
 
 while getopts “ht:u:p:k:s:r:b:” OPTION
@@ -47,15 +41,6 @@ do
     p)
       MONGODB_PASSWORD=$OPTARG
       ;;
-    k)
-      AWS_ACCESS_KEY=$OPTARG
-      ;;
-    s)
-      AWS_SECRET_KEY=$OPTARG
-      ;;
-    r)
-      S3_REGION=$OPTARG
-      ;;
     b)
       S3_BUCKET=$OPTARG
       ;;
@@ -66,7 +51,7 @@ do
   esac
 done
 
-if [[ -z $MONGODB_USER ]] || [[ -z $MONGODB_PASSWORD ]] || [[ -z $AWS_ACCESS_KEY ]] || [[ -z $AWS_SECRET_KEY ]] || [[ -z $S3_REGION ]] || [[ -z $S3_BUCKET ]]
+if [[ -z $MONGODB_USER ]] || [[ -z $MONGODB_PASSWORD ]] || [[ -z $S3_BUCKET ]]
 then
   usage
   exit 1
