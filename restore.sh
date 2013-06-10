@@ -17,9 +17,9 @@ and restores it to specified database.
 
 OPTIONS:
    -help   Show this message
-   -u      Mongodb user
-   -p      Mongodb password
-   -h      OPTIONAL: Default is "localhost:27017"
+   # -u      OPTIONAL: Mongodb user
+   # -p      OPTIONAL: Mongodb password
+   -o      OPTIONAL: Default is "localhost:27017"
            Mongodb host <hostname><:port>
    -f      Mongodb database(from)
    -t      OPTIONAL: Default is same as -t options value
@@ -28,8 +28,8 @@ OPTIONS:
 EOF
 }
 
-MONGODB_USER=
-MONGODB_PASSWORD=
+# MONGODB_USER=
+# MONGODB_PASSWORD=
 MONGODB_HOST=
 MONGODB_DATABASE_FROM=
 MONGODB_DATABASE_TO=
@@ -42,12 +42,12 @@ do
       usage
       exit 1
       ;;
-    u)
-      MONGODB_USER=$OPTARG
-      ;;
-    p)
-      MONGODB_PASSWORD=$OPTARG
-      ;;
+    # u)
+    #   MONGODB_USER=$OPTARG
+    #   ;;
+    # p)
+    #   MONGODB_PASSWORD=$OPTARG
+    #   ;;
     o)
       MONGODB_HOST=$OPTARG
       ;;
@@ -67,7 +67,7 @@ do
   esac
 done
 
-if [[ -z $MONGODB_USER ]] || [[ -z $MONGODB_PASSWORD ]] || [[ -z $S3_BUCKET ]] || [[ -z $MONGODB_DATABASE_FROM ]]
+if [[ -z $S3_BUCKET ]] || [[ -z $MONGODB_DATABASE_FROM ]]
 then
   usage
   exit 1
@@ -87,9 +87,8 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 echo $DIR
 OUT_DIR=$DIR/restore
 
-# LATEST_FILE_PATH=$(s3cmd ls s3://s3.backup.skillsand.me | sort -r | head -1 | awk '{print $4}')
-# s3cmd get $LATEST_FILE_PATH
 LATEST_FILE_PATH=$(s3cmd ls s3://$S3_BUCKET | sort -r | head -1 | awk '{print $4}')
+echo $LATEST_FILE_PATH
 s3cmd get $LATEST_FILE_PATH $OUT_DIR/
 
 TAR_FILE_NAME="$( ls -rt $OUT_DIR | tail -1 )"
