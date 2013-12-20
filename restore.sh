@@ -89,7 +89,7 @@ OUT_DIR=$DIR/restore
 
 DATE_YYYY=$(date -u "+%Y")
 DATE_YYYYMM=$(date -u "+%Y-%m")
-LATEST_FILE_PATH=$(s3cmd ls s3://$S3_BUCKET/$DATE_YYYY/$DATE_YYYYMM | sort -r | head -1 | awk '{print $4}')
+LATEST_FILE_PATH=$(s3cmd ls s3://$S3_BUCKET/$DATE_YYYY/$DATE_YYYYMM/ | sort -r | head -1 | awk '{print $4}')
 echo $LATEST_FILE_PATH
 s3cmd get $LATEST_FILE_PATH $OUT_DIR/
 
