@@ -87,7 +87,9 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 echo $DIR
 OUT_DIR=$DIR/restore
 
-LATEST_FILE_PATH=$(s3cmd ls s3://$S3_BUCKET | sort -r | head -1 | awk '{print $4}')
+DATE_YYYY=$(date -u "+%Y")
+DATE_YYYYMM=$(date -u "+%Y-%m")
+LATEST_FILE_PATH=$(s3cmd ls s3://$S3_BUCKET/$DATE_YYYY/$DATE_YYYYMM | sort -r | head -1 | awk '{print $4}')
 echo $LATEST_FILE_PATH
 s3cmd get $LATEST_FILE_PATH $OUT_DIR/
 

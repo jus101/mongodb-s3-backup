@@ -89,4 +89,6 @@ tar -C $DIR/backup/ -zcvf $DIR/backup/$ARCHIVE_NAME $FILE_NAME/
 rm -r $DIR/backup/$FILE_NAME
 
 # Send the file to S3
-s3cmd put $DIR/backup/$ARCHIVE_NAME s3://$S3_BUCKET
+DATE_YYYY=$(date -u "+%Y")
+DATE_YYYYMM=$(date -u "+%Y-%m")
+s3cmd put $DIR/backup/$ARCHIVE_NAME s3://$S3_BUCKET/$DATE_YYYY/$DATE_YYYYMM/$ARCHIVE_NAME
