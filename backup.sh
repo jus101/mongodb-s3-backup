@@ -28,7 +28,7 @@ MONGODB_PASSWORD=
 MONGODB_HOST=
 S3_BUCKET=
 
-while getopts “h:u:p:o:k:s:r:b:” OPTION
+while getopts "h:u:p:o:k:s:r:b:" OPTION
 do
   case $OPTION in
     h)
